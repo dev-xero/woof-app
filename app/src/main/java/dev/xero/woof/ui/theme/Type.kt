@@ -15,14 +15,15 @@ val Inter = FontFamily(
 )
 
 val Outfit = FontFamily(
-	Font(R.font.outfit_regular)
+	Font(R.font.outfit_regular),
+	Font(R.font.outfit_xbold, FontWeight.Bold)
 )
 
 // Set of Material typography styles to start with
 val Typography = Typography(
 	h1 = TextStyle(
 		fontFamily = Outfit,
-		fontWeight = FontWeight.Normal,
+		fontWeight = FontWeight.Bold,
 		fontSize = 30.sp
 	),
 
