@@ -5,6 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,7 +15,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -98,19 +108,58 @@ fun DogItem(
 	dog: Dog,
 	modifier: Modifier = Modifier
 ) {
+	var expanded by remember { mutableStateOf(false) }
+
 	Card(
 		modifier = modifier.padding(8.dp),
 		elevation = 4.dp
 	) {
-		Row(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(8.dp),
-			verticalAlignment = Alignment.CenterVertically
+		Column(
+			modifier = modifier
+				.animateContentSize(
+					animationSpec = spring(
+						dampingRatio = Spring.DampingRatioMediumBouncy,
+						stiffness = Spring.StiffnessLow
+					)
+				)
 		) {
-			DogIcon(dogIconRes = dog.imageResID)
-			DogInformation(dogNameRes = dog.nameResID, dogAge = dog.age)
+			Row(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(8.dp),
+				verticalAlignment = Alignment.CenterVertically
+			) {
+				DogIcon(dogIconRes = dog.imageResID)
+				DogInformation(dogNameRes = dog.nameResID, dogAge = dog.age)
+				Spacer(modifier = Modifier.weight(1f))
+				DogItemButton(expanded = expanded, onClick = { expanded = !expanded })
+			}
+			
+			if (expanded) {
+				DogHobby(dogHobby = dog.hobbiesResID)
+			}
 		}
+	}
+}
+
+/**
+ * Composable defining the item dropdown button
+ * @param expanded [Boolean] Whether the item is expanded or not
+ * @param onClick [Function] When the button is clicked
+ * @param modifier [Modifier] Modifier for this composable
+ * */
+@Composable
+private fun DogItemButton(
+	expanded: Boolean,
+	onClick: () -> Unit,
+	modifier: Modifier = Modifier
+) {
+	val icon = if (!expanded) Icons.Filled.ExpandMore else Icons.Filled.ExpandLess
+	IconButton(onClick = onClick) {
+		Icon(
+			imageVector = icon,
+			contentDescription = stringResource(id = R.string.expand_button_content_description)
+		)
 	}
 }
 
@@ -156,6 +205,36 @@ fun DogInformation(
 
 		Text(
 			text = stringResource(id = R.string.years_old, dogAge),
+			style = MaterialTheme.typography.body1
+		)
+	}
+}
+
+/**
+ * Composable that displays the dog's hobbies
+ * @param dogHobby [StringRes] String Res ID for the dog's hobby
+ * @param modifier [Modifier] Modifier for this composable
+ * */
+@Composable
+fun DogHobby(
+	@StringRes dogHobby: Int,
+	modifier: Modifier = Modifier
+) {
+	Column(
+		modifier = modifier
+			.padding(
+				top = 8.dp,
+				start = 16.dp,
+				bottom = 16.dp,
+				end = 16.dp
+			)
+	) {
+		Text(
+			text = stringResource(id = R.string.about),
+			style = MaterialTheme.typography.h3
+		)
+		Text(
+			text = stringResource(id = dogHobby),
 			style = MaterialTheme.typography.body1
 		)
 	}
