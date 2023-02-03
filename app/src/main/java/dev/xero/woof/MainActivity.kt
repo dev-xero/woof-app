@@ -42,7 +42,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun WoofApp() {
 	LazyColumn(
-		modifier = Modifier.background(MaterialTheme.colors.background)
+		modifier = Modifier
+			.background(MaterialTheme.colors.background)
+			.fillMaxHeight()
 	) {
 		items(dogs) {
 			dog -> DogItem(dog = dog)
@@ -118,12 +120,23 @@ fun DogInformation(
 }
 
 /**
- * Preview Composable
+ * Preview Composable [Light Theme]
  * */
 @Preview
 @Composable
 fun WoofPreview() {
 	WoofTheme(darkTheme = false) {
+		WoofApp()
+	}
+}
+
+/**
+ * Preview Composable [Dark Theme]
+ * */
+@Preview
+@Composable
+fun WoofDarkPreview() {
+	WoofTheme(darkTheme = true) {
 		WoofApp()
 	}
 }
