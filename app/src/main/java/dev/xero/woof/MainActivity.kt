@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +15,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +41,9 @@ class MainActivity : ComponentActivity() {
  * */
 @Composable
 fun WoofApp() {
-	LazyColumn {
+	LazyColumn(
+		modifier = Modifier.background(MaterialTheme.colors.background)
+	) {
 		items(dogs) {
 			dog -> DogItem(dog = dog)
 		}
@@ -60,6 +64,7 @@ fun DogItem(
 		modifier = modifier
 			.fillMaxWidth()
 			.padding(8.dp)
+			.background(color = MaterialTheme.colors.surface)
 	) {
 		DogIcon(dogIconRes = dog.imageResID)
 		DogInformation(dogNameRes = dog.nameResID, dogAge = dog.age)
@@ -81,7 +86,8 @@ fun DogIcon(
 			.size(64.dp)
 			.padding(8.dp),
 		painter = painterResource(id = dogIconRes),
-		contentDescription = null
+		contentDescription = null,
+		contentScale = ContentScale.Crop
 	)
 }
 
@@ -100,11 +106,13 @@ fun DogInformation(
 	Column {
 		Text(
 			text = stringResource(id = dogNameRes),
-			modifier = modifier.padding(top = 8.dp)
+			modifier = modifier.padding(top = 8.dp),
+			color = MaterialTheme.colors.onSurface
 		)
 
 		Text(
-			text = dogAge.toString(),
+			text = stringResource(id = R.string.years_old, dogAge),
+			color = MaterialTheme.colors.onSurface
 		)
 	}
 }
