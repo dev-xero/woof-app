@@ -10,11 +10,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -62,14 +66,19 @@ fun DogItem(
 	dog: Dog,
 	modifier: Modifier = Modifier
 ) {
-	Row(
-		modifier = modifier
-			.fillMaxWidth()
-			.padding(8.dp)
-			.background(color = MaterialTheme.colors.surface)
+	Card(
+		modifier = modifier.padding(8.dp),
+		elevation = 4.dp
 	) {
-		DogIcon(dogIconRes = dog.imageResID)
-		DogInformation(dogNameRes = dog.nameResID, dogAge = dog.age)
+		Row(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(8.dp),
+			verticalAlignment = Alignment.CenterVertically
+		) {
+			DogIcon(dogIconRes = dog.imageResID)
+			DogInformation(dogNameRes = dog.nameResID, dogAge = dog.age)
+		}
 	}
 }
 
@@ -86,7 +95,8 @@ fun DogIcon(
 	Image(
 		modifier = modifier
 			.size(64.dp)
-			.padding(8.dp),
+			.padding(8.dp)
+			.clip(RoundedCornerShape(50)),
 		painter = painterResource(id = dogIconRes),
 		contentDescription = null,
 		contentScale = ContentScale.Crop
@@ -109,12 +119,12 @@ fun DogInformation(
 		Text(
 			text = stringResource(id = dogNameRes),
 			modifier = modifier.padding(top = 8.dp),
-			color = MaterialTheme.colors.onSurface
+			style = MaterialTheme.typography.h2
 		)
 
 		Text(
 			text = stringResource(id = R.string.years_old, dogAge),
-			color = MaterialTheme.colors.onSurface
+			style = MaterialTheme.typography.body1
 		)
 	}
 }
